@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Trezor Suite
+Comment=Hardware wallet interface for managing Trezor devices
+Exec=/opt/trezor/Trezor-Suite.AppImage --no-sandbox
+Icon=trezor
+Terminal=false
+Type=Application
+Categories=Finance;Office;
+StartupNotify=true
