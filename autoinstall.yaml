@@ -1,0 +1,36 @@
+#cloud-config
+autoinstall:
+  version: 1
+  identity:
+    hostname: <hostname>
+    username: <username>
+    password: <SHA512-password-hash>
+  keyboard:
+    layout: us
+    variant: ''
+  locale: en_US
+  timezone: <timezone>
+  packages:
+    - alacritty
+    - curl
+    - gimp
+    - git
+    - golang-go
+    - meld
+    - neofetch
+    - nmap
+    - openjdk-21-jdk
+    - python3
+    - python3-pip
+    - tree
+    - vim-gtk3
+    - vlc
+  storage:
+    layout:
+      name: lvm
+  user-data:
+    disable_root: false
+    ssh:
+      install-server: yes
+  late-commands:
+    - echo "Late commands section (future use for provisioning hooks)"
