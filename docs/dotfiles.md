@@ -17,20 +17,6 @@ This document outlines the structure, purpose, and specific configuration choice
 - Appends personal bin directories to `$PATH` safely and idempotently
 - Defines environment variables: `EDITOR`, `VISUAL`, `PAGER`, `GOPATH`
 
-```bash
-for dir in "$HOME/.local/bin" "$HOME/bin" "/usr/local/go/bin"; do
-  if [ -d "$dir" ] && [[ ":$PATH:" != *":$dir:"* ]]; then
-    PATH="$PATH:$dir"
-  fi
-done
-export PATH
-
-export EDITOR=/usr/bin/vim
-export VISUAL=/usr/bin/vim
-export PAGER=/usr/bin/less
-export GOPATH="$HOME/go"
-```
-
 ---
 
 ## `.bashrc`
@@ -41,92 +27,42 @@ export GOPATH="$HOME/go"
 - Defines shell interactivity settings (history, prompt, etc.)
 - Loads `.bash_aliases`
 
-```bash
-[ -f "$HOME/.bash_env" ] && . "$HOME/.bash_env"
-
-case $- in
-  *i*) ;;  # Continue only if interactive
-  *) return ;;
-esac
-
-# History settings
-HISTCONTROL=ignoredups:ignorespace
-shopt -s histappend
-HISTSIZE=100000
-HISTFILESIZE=2000000
-shopt -s checkwinsize
-
-# lesspipe
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# Load user aliases
-[ -f "$HOME/.bash_aliases" ] && . "$HOME/.bash_aliases"
-```
-
 ---
 
 ## `.profile`
 **Purpose:** Login shell setup. Sources `.bash_env` and `.bashrc` to ensure full environment for SSH/TTY.
 
-```bash
-[ -f "$HOME/.bash_env" ] && . "$HOME/.bash_env"
-
-if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
-  . "$HOME/.bashrc"
-fi
-```
-
 ---
 
 ## `.bash_aliases`
-**Purpose:** Aliases for common CLI commands, kept modular.
-
-**Example Content:**
-```bash
-if [ -x /usr/bin/dircolors ]; then
-  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-
-  alias ls='ls --color=auto'
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  alias egrep='egrep --color=auto'
-fi
-
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-```
+**Purpose:** Stores all my bash aliases; kept modular.
 
 ---
 
 ## `.vimrc`
-**Purpose:** Vim configuration for a minimal but effective editing experience.
 
-**Core Settings:**
-```vim
-set nocompatible
-set number
-set relativenumber
-syntax on
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set autoindent
-set smartindent
-set nowrap
-set cursorline
-set clipboard=unnamedplus
-```
+Vim is configured for high-speed, modal editing with a modular and secure setup. The main config lives in `~/.vimrc` and is backed by plugin-specific logic and filetype rules in `~/.vim/plugin/`.
 
----
+Key features:
 
-## `.vim/` Directory
+- **Plugin-Driven Architecture** via [Vundle](https://github.com/VundleVim/Vundle.vim)
+  - Fuzzy nav (`ctrlp`), git tools (`fugitive`), statusline (`airline`), buffer explorer, and language syntax support
+- **Security Hardened** with controlled modeline behavior and logging for shell overrides
+- **Custom Compile Dispatcher** with `<F5>` mapped to language-specific build/run
+- **Custom Project Bootstraps** with `:TabRepo` for isolated tab working environments
+- **Filetype-Specific Indentation** handled via `plugin/filetype-indent_settings.vim`
+- **ChezMoi Integrated**: `:VimrcApply` triggers a `chezmoi apply` and reload
+
+For full configuration and mappings, see [`vim.md`](docs/vim.md).
+
+### `.vim/` Directory
 **Purpose:** Storage for custom plugins, colorschemes, or ftplugin overrides (if used).
 
 **Common Usage:**
 - `~/.vim/colors/` for color schemes
 - `~/.vim/ftplugin/` for language-specific tweaks
 - `~/.vim/autoload/` + `~/.vim/plug.vim` if using plugin managers like vim-plug
+- `~/.vim/plugin/filetype-indent_settings.vim`
 
 ---
 
